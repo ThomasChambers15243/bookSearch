@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{%block listDropdown%}
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/login">Login</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                        <a class="dropdown-item" href="/register">Register</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/account">Account</a>
+                    </div>
+                </li>
+{%endblock%}
+
+
+{% block main %}
+<script>
+    var alertDisplay = function() {
+        var alert = document.getElementById('alert');
+        if ("{{accountError[0]}}" == "true"){
+            alert.style.display = "block";
+        } else {
+            alert.style.display = "none";
+        }
+    }
+    window.onload = alertDisplay;
+
+</script>
+
+<form action="/login" method="post">
+
+    <div class="form-group">
+        <label for="userEmail">Email address</label>
+        <input type="email" class="form-control" name="userEmail" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password">
+    </div>
+    <button type="submit"  id="submitButton" class="btn btn-primary">Login</button>
+</form>
+
+<p><br><br></p>
+{% if accountError[1] != "notLoggedIn" %}
+<div class="alert alert-danger" id="alert" role="alert">
+{% else %}
+<div class="alert alert-primary" id="alert" role="alert">
+{% endif %}
+  {% if accountError[1] == "passOrEmail" %}
+  Incorect Email or password
+  {% elif accountError[1] == "emailMissing" %}
+  Please enter Email
+  {% elif accountError[1] == "passwordMissing" %}
+  Please Enter Password
+  {% elif accountError[1] == "notLoggedIn" %}
+  Please Login to access your account
+  {% endif %}
+</div>
+
+
+{%endblock%}

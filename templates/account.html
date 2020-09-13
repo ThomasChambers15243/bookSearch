@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Account
+{% endblock %}
+
+{%block listDropdown%}
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/login">Login</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                        <a class="dropdown-item" href="/register">Register</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/account">Account</a>
+                    </div>
+                </li>
+{%endblock%}
+
+
+{% block main %}
+<div class="d-flex justify-content-center">
+    <h1 style="border-bottom: 1px solid #dedede; margin-bottom: 20px;" class="display-1">Welcome</h1>
+</div>
+
+<style>
+    #scroll {
+        height: 200px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        text-align:justify;
+    }
+</style>
+<script>
+    var alertDisplay = function() {
+        var alert = document.getElementById('alert');
+        if ("{{accountError[0]}}" == "true"){
+            alert.style.display = "block";
+        } else {
+            alert.style.display = "none";
+        }
+    }
+    window.onload = alertDisplay;
+
+</script>
+{% if contents == 0 %}
+
+    {% if accountError[1] == "noContents" %}
+        <div class="alert alert-primary" id="alert" role="alert">
+            You have no books saved to your account :(
+        </div>
+
+    {% endif %}
+
+{% else %}<!-- Flilter for read and to_read -->
+        {% for i in range(0, books|length)%}
+            <br/>
+            <div class="card mx-auto" style="width: 18rem;">
+                <img class="card-img-top" src="{{books[i][0]["img"]}}" alt="Card image cap" width="200" height="340">
+                <div class="card-body">
+                    <h5 class="card-title">{{books[i][0]["title"]}}</h5>
+                    <p class="card-text">-{{books[i][0]["authors"]}}</p>
+                    <p id="scroll" class="card-text">{{books[i][0]["full_des"]}}</p>
+                </div>
+                <ul class="list-group list-group-flush"><!--{{userBooks[i][0]["rating"]}} -->
+                    <li class="list-group-item"><b>Rating: </b>{% if userBooks[i][0]["rating"] == -1 %} Not Rated Yet {%else%} {{userBooks[i][0]["rating"]}}/5{%endif%}</li>
+
+                    <form action="/rating" method="post">
+                        <div class="input-group">
+                            <select class="custom-select" name="bookRating" id="inputGroupSelect04">
+                                <option selected value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <input type="hidden" name="bookISBN" value="{{books[i][0]["ISBN"]}}">
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit"><b>Rate</b></button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <li class="list-group-item"><b>Read?: </b>{{userBooks[i][0]["book_state"]}}
+                    <!--{%for i in range(0, userBooks|length) %}
+                        {%if userBooks[i][0]["book_ISBN"] == books[i][0]["ISBN"] %}
+                            {{userBooks[i][0]["book_state"]}}
+                            {% set i = 100 %}
+                        {%endif%}
+                    {%endfor%}--></li>
+                    <li class="list-group-item"><b>Page Count:</b> {{books[i][0]["page_count"]}}</li>
+                    <li class="list-group-item"><b>Author(s):</b> {{books[i][0]["authors"]}}</li>
+                    <li class="list-group-item"><b>Publisher:</b> {{books[i][0]["publisher"]}}</li>
+                    <li class="list-group-item"><b>In the public Domain?</b> {% if books[i][0]["public_domain"] == i %} <br/>Yes {%else%} <br/>No {%endif%}</li>
+                    <li class="list-group-item"><b>Language:</b> {{books[i][0]["language"]}}</li>
+                    <li class="list-group-item"><b>Is This copy an Ebook?</b>{% if books[i][0]["isEbook"] == i %} <br/>Yes {%else%} <br/>No {%endif%}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="https://www.amazon.co.uk/s?k={{books[i][0]["ISBN"]}}" class="card-link" target="_blank">Amazon ISBN Search</a>
+                    <br/>
+                    <a href="https://www.amazon.co.uk/s?k={{books[i][0]["title"]}}" class="card-link" target="_blank">Amazon Name Search</a>
+                </div>
+            </div>
+        {%endfor%}
+{%endif%}
+{%endblock%}

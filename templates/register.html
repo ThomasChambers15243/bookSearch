@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+
+{%block listDropdown%}
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Account </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/login">Login</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                        <a class="dropdown-item" href="/register">Register</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/account">Account</a>
+                    </div>
+                </li>
+{%endblock%}
+
+
+{% block main %}
+
+<script>
+
+    //Function to disable the button and change the <span> message
+    var isMatching = function(match) {
+
+        if (match == 'true'){
+            document.getElementById('message').style.color = 'green';
+            document.getElementById('message').innerHTML = 'matching';
+            document.getElementById('submitButton').disabled = false;
+        } else{
+            document.getElementById('message').style.color = 'red';
+            document.getElementById('message').innerHTML = 'not matching';
+            document.getElementById('submitButton').disabled = true;
+        }
+    }
+
+
+
+    var check = function() {
+
+        var password = document.getElementById('password');
+        var conPassword = document.getElementById('confirmPassword');
+        //Check if theres somthing in both of the password inputs first
+        if (password.value.length != 0 && conPassword.value.length != 0){
+            if (password.value == conPassword.value) {
+                isMatching('true')
+            }
+
+        } else {
+            isMatching('false')
+        }
+    }
+
+    var alertDisplay = function() {
+        var alert = document.getElementById('dangerAlert');
+        if ("{{accountError[0]}}" == "true"){
+            alert.style.display = "block";
+        } else {
+            alert.style.display = "none";
+        }
+    }
+
+    window.onload = alertDisplay;
+</script>
+
+<form action="/register" method="post">
+  <div class="form-group">
+    <label for="userEmail">Email address</label>
+    <input type="email" class="form-control" id="userEmail" name="userEmail" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" name="password" placeholder="Password"  onkeyup='check();'>
+  </div>
+
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Password"  onkeyup='check();'>
+    <span id='message'></span>
+  </div>
+    <button type="submit"  id="submitButton" disabled class="btn btn-primary">Register</button>
+
+</form>
+
+<p><br><br></p>
+
+<div class="alert alert-danger" id="dangerAlert" role="alert">
+  {% if accountError[1] == "email" %}
+  Email already in use!
+  {% elif accountError[1] == "password" %}
+  Invalid password, password must:<br>
+  <ul>
+      <li>Have atleast 8  characters</li>
+      <li>Have atleast 1 number</li>
+      <li>Have atleast 1 upercase letter</li>
+  </ul>
+  {% elif accountError[1] == "emailMissing" %}
+  Please enter an Email
+  {% endif %}
+</div>
+
+
+{%endblock%}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Book Results
+{% endblock %}
+
+{% block main %}
+
+<div>
+    <blockquote class="blockquote text-center">
+      <p class="mb-1">{{ bookINFO["title"] }} </p>
+      <footer class="blockquote-footer">Author(s): <cite title="Source Title">{% for i in range(0, bookINFO["author(s)"]|length)%} {{bookINFO["author(s)"][i]}} {%endfor%}  </cite></footer>
+    </blockquote>
+    <p class="text-center font-weight-bold">Publisher</p>
+    <p class="text-center font-weight-normal">{{bookINFO["publisher"]}}</p>
+    <p class="text-center font-weight-bold">Date Published</p>
+    <p class="text-center font-weight-normal">{{bookINFO["publishedDate"]}}</p>
+    <p class="text-center font-weight-bold">Page Count</p>
+    <p class="text-center font-weight-normal">{{bookINFO["pageCount"]}}</p>
+    <div class ="d-flex justify-content-center">
+        <form action = "/userBooks" method="post">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <button class="btn btn-outline-secondary" type="submit" ata-toggle="tooltip" data-placement="top" title="Must be logged in">Save Book</button>
+              </div>
+              <select class="custom-select col-7" name="saveBook" id="saveBook">
+                <option value="read">Have Read</option>
+                <option value="to_read">To Read</option>
+              </select>
+            </div>
+        </form>
+    </div>
+    <img src= "{{ bookINFO["img"] }}" alt="The book: {{ bookINFO["title"] }}" class="img-thumbnail rounded mx-auto d-block Responsice image" width="200" height="240">
+    <p class="text-center font-weight-bold"><br>Description</p>
+    <p class="text-center font-weight-normal">{{bookINFO["fullDescription"]}}</p>
+    <p class="text-center font-weight-bold">Extra Tags</p>
+    <p class="text-center font-weight-light">Language</p>
+    <p class="text-center font-italic">{{bookINFO["language"]}}</p>
+    {%if bookINFO["isEBook"] == false%}
+        {% set bookCopy = "Book" %}
+    {%else%}
+        {% set bookCopy = "Ebook" %}
+    {%endif%}
+    <p class="text-center font-weight-light">Ebook or book?</p>
+    <p class="text-center font-italic">{{bookCopy}}</p>
+</div>
+
+
+{%endblock%}

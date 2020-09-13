@@ -1,0 +1,58 @@
+{% extends "searchLayout.html" %}
+
+{% block title %}
+    Book Search ISBN
+{% endblock %}
+
+{%block listSearchISBN%}
+    <li class="nav-item active">
+        <a class="nav-link" href="/bookSearchISBN">Book Search by ISBN <span class="sr-only">(current)</span></a>
+    </li>
+{%endblock%}
+
+{%block form%}
+    <form method="POST" action = "/bookSearchISBN">
+{%endblock%}
+
+{%block input%}
+    <input type="text" class="form-control form-control-lg" id="booksISBN" name="bookISBN" placeholder="Enter book ISBN" onkeyup='check();'>
+    <small id="bookHelp" class="form-text text-muted">Enter only one book's isbn, with only the numbers.</small
+    </div>
+    <button id="searchButton" type="submit" disabled class="btn btn-primary">Search</button>
+{%endblock%}
+
+{%block alert%}
+
+    <script>
+
+        var alertDisplay = function() {
+            var alert = document.getElementById('dangerAlert');
+            if ("{{searchError[0]}}" == "true"){
+                alert.style.display = "block";
+            } else {
+                alert.style.display = "none";
+            }
+        }
+        var check = function(){
+            if (document.getElementById("booksISBN").value.length != 0){
+                document.getElementById("searchButton").disabled = false;
+            }
+        }
+
+        window.onload = alertDisplay;
+
+    </script>
+    <p><br></p>
+    <div class="alert alert-danger" id="dangerAlert" role="alert">
+        {% if searchError[1] == "noItems" %}
+            Could not find the book
+            <ul>
+                <li>ISBN may be wrong</li>
+                <li>Book may not be in database yet</li>
+            </ul>
+        {% elif searchError[1] == "invalidFormat" %}
+            Invalid ISBN Format
+        {% endif %}
+    </div>
+
+{%endblock%}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+
+{%block main%}
+
+    {%block form%}<form method="POST" action = "/">{%endblock%}
+      <div class="form-group">
+        <label for="exampleInputEmail1">Book ISBN</label>
+        {%block input%}
+        <input type="text" class="form-control form-control-lg" name="bookISBN" placeholder="">
+        <small id="emailHelp" class="form-text text-muted">Enter only one book's </small>
+      </div>
+      <button type="submit" class="btn btn-primary">Search</button>
+    {%endblock%}
+    </form>
+
+
+    {%block alert%}
+
+    {%endblock%}
+
+{%endblock%}
